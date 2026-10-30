@@ -341,7 +341,6 @@ body.finale-on{background:#3a1b26;}
       <span class="progress-label" id="progressLabel">Welcome</span>
       <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
     </div>
-    <button class="icon-btn" id="setupBtn" title="Setup & personalize" aria-label="Open setup and personalization">⚙️</button>
   </header>
   <main class="stage" id="stage" aria-live="polite"></main>
 </div>
@@ -362,16 +361,17 @@ const CONFIG = {
   // --- names ---
   wifeyName: "Aendri",              // her nickname: "Baby", "Princess", "Jaan"...
   husbandName: "your husband",      // used in a few lines; keep lowercase-friendly
-  signoff: "Your slightly hopeless, completely in-love husband",
+  signoff: "Your slightly hopeless, forever-a-little-sleepy, completely in-love husband — Venkatesh",
 
   // Which photo (0-based) to feature on the final letter screen. Default: last.
-  finalePhotoIndex: null,           // null = use the last photo you added
+  finalePhotoIndex: 4,              // photo 5 (the lake sunset) as the closing-letter backdrop
 
   // --- LEVEL 1: the complaint ---
   complaint: {
     charges: [
       "Not giving {name} enough attention.",
       "Being suspiciously busy when cuddles are required.",
+      "Sleeping a LOT — and whenever he feels like it — even during prime {name} hours. 😴",
       "Failing to provide the legally mandated daily quota of kisses.",
       "Making {name} miss him too much.",
       "Being so cute that {name} gets angry for absolutely no reason. 🥹",
@@ -391,7 +391,7 @@ const CONFIG = {
     {
       q: "What does your husband secretly want most?",
       options: [
-        { t: "Eight hours of uninterrupted sleep.", r: "Cute theory. But he'd trade the sleep for five more minutes with you every single time." },
+        { t: "Eight hours of uninterrupted sleep.", r: "Okay, busted — Venkatesh DOES love his sleep (a lot). But he'd still trade every hour of it for five more minutes with you." },
         { t: "A lifetime subscription to your hugs.", r: "Correct. Auto-renewing. No cancellation button exists. He checked.", best:true },
         { t: "To win every argument.", r: "Ha. He gave up on that the day he married you. Happily." },
       ],
@@ -443,6 +443,7 @@ const CONFIG = {
   court: {
     charges: [
       "Failure to provide adequate cuddles.",
+      "Professional-level sleeping, at championship hours, when {name} wanted to talk. 😴",
       "Excessive thoughts about {name} without immediately informing her.",
       "Missing {name} but sometimes forgetting to say it.",
       "Being unable to resist her smile.",
@@ -493,7 +494,7 @@ I want to make you laugh when you're upset, hold you when you need comfort, cele
 
 I love your smile, your little moods, your dramatic complaints, your cuteness, and all the tiny things that make you YOU.
 
-And yes, Your Highness — I officially accept that your husband needs to improve his affection delivery system. 😂❤️
+And yes, Your Highness — I officially accept that your husband needs to improve his affection delivery system (and maybe sleep a little less). 😂❤️ Though, in my defence: even when I'm fast asleep, I'm pretty sure I'm dreaming about you.
 
 So here is my final verdict:
 
@@ -592,7 +593,7 @@ function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;',
 function photoHTML(i, phLabel){
   const url=PhotoStore.get(i);
   if(url){ return `<div class="photo-frame"><img src="${url}" alt="A photo of ${esc(name())}" loading="lazy"></div>`; }
-  return `<div class="photo-frame"><div class="photo-ph"><div class="big">🌸</div><div class="cap">${esc(phLabel||"Add a photo in Setup ⚙️")}</div></div></div>`;
+  return `<div class="photo-frame"><div class="photo-ph"><div class="big">🌸</div><div class="cap">${esc(phLabel||"")}</div></div></div>`;
 }
 
 // ---- motion / fx ----
@@ -677,7 +678,7 @@ function welcome(){
   const hero=PhotoStore.firstUrl();
   const heroHTML = hero
     ? `<div class="photo-frame" style="aspect-ratio:4/5;margin:0 0 20px;"><img src="${hero}" alt="A photo of ${esc(name())}"></div>`
-    : `<div class="photo-frame" style="aspect-ratio:4/5;margin:0 0 20px;"><div class="photo-ph"><div class="big">💗</div><div class="cap">Tap ⚙️ Setup to add ${esc(name())}'s photos</div></div></div>`;
+    : `<div class="photo-frame" style="aspect-ratio:4/5;margin:0 0 20px;"><div class="photo-ph"><div class="big">💗</div><div class="cap">For ${esc(name())} 🌸</div></div></div>`;
   const c=el(`<section class="card center enter">
     <p class="eyebrow">Highly Confidential · Wife Matters Division</p>
     ${heroHTML}
@@ -763,7 +764,7 @@ function level3(){
     <h2>The ${esc(name())} Photo Gallery</h2>
     <p class="lead">The prosecution submits the following evidence. Tap each one to reveal why you're the highlight of every single day.</p>
     <div class="gallery">${items}</div>
-    <p class="muted center gallery-foot" id="galNote">No photos yet? Tap ⚙️ Setup to add hers — the notes work either way.</p>
+    <p class="muted center gallery-foot" id="galNote">Tap each photo to reveal why he adores you. 💗</p>
   </section>`);
   let opened=0;
   c.querySelectorAll(".g-item").forEach(gi=>{
@@ -986,9 +987,7 @@ function completion(){
   floatHearts(12);
 }
 
-// =====================  SETUP SHEET  =====================
-const setupBtn=document.getElementById("setupBtn");
-setupBtn.onclick=openSetup;
+// =====================  SETUP SHEET (disabled — gift build; name & photos are fixed)  =====================
 function openSetup(){
   const overlay=el(`<div class="overlay" role="dialog" aria-modal="true" aria-label="Setup and personalization"></div>`);
   const sheet=el(`<div class="sheet"></div>`);
