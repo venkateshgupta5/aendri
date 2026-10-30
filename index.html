@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#FBE3E0" />
+<title>Operation: My Wifeey Deserves 100% Attention</title>
+<style>
+/* =========================================================================
+   OPERATION: MY WIFEEY DESERVES 100% ATTENTION
+   A tiny romantic world, hand-made for one person.
+   Everything you can edit lives in the CONFIG object down in the <script>.
+   ========================================================================= */
+
+:root{
+  --cream:#FFF8F2;
+  --cream-2:#FDEDE6;
+  --blush:#FBE0DC;
+  --blush-deep:#F6CBC6;
+  --peach:#FAD6C0;
+  --rose:#E2688A;
+  --rose-deep:#C44C6E;
+  --rose-ink:#A23A58;
+  --gold:#C8A24C;
+  --gold-soft:#E7CE92;
+  --ink:#5B3A42;
+  --ink-soft:#9A757C;
+  --white-glass:rgba(255,255,255,.72);
+  --shadow:0 18px 50px -18px rgba(178,70,97,.45);
+  --shadow-soft:0 10px 30px -14px rgba(178,70,97,.35);
+  --serif:"Hoefler Text","Baskerville","Palatino Linotype","Palatino",Georgia,"Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --script:"Snell Roundhand","Brush Script MT","Segoe Script","Bradley Hand",cursive;
+  --radius:28px;
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  font-family:var(--sans);
+  color:var(--ink);
+  background:
+    radial-gradient(120% 90% at 15% 0%, #FFFDFB 0%, var(--cream) 38%, var(--blush) 100%),
+    radial-gradient(90% 70% at 100% 100%, rgba(250,214,192,.55) 0%, rgba(250,214,192,0) 60%);
+  background-attachment:fixed;
+  min-height:100svh;
+  min-height:100vh;
+  overflow-x:hidden;
+  line-height:1.5;
+}
+
+/* soft floating gold/blush glow blobs in the far background */
+.bg-glow{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.bg-glow span{position:absolute;border-radius:50%;filter:blur(60px);opacity:.5;}
+.bg-glow span:nth-child(1){width:46vmin;height:46vmin;left:-10vmin;top:-8vmin;background:rgba(226,104,138,.30);}
+.bg-glow span:nth-child(2){width:40vmin;height:40vmin;right:-12vmin;top:30vh;background:rgba(232,206,146,.40);}
+.bg-glow span:nth-child(3){width:50vmin;height:50vmin;left:20vw;bottom:-18vmin;background:rgba(250,214,192,.45);}
+
+/* ---------- app frame ---------- */
+#app{position:relative;z-index:1;min-height:100svh;min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+.topbar{
+  width:100%;max-width:520px;display:flex;align-items:center;gap:12px;
+  padding:14px 20px calc(10px + env(safe-area-inset-top)) 20px;
+}
+.progress-wrap{flex:1;display:flex;flex-direction:column;gap:6px;}
+.progress-label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;}
+.progress-track{height:7px;border-radius:999px;background:rgba(196,76,110,.15);overflow:hidden;}
+.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--rose),var(--gold-soft));width:0;transition:width .6s cubic-bezier(.22,1,.36,1);}
+.icon-btn{
+  border:1px solid rgba(200,162,76,.45);background:var(--white-glass);backdrop-filter:blur(6px);
+  width:42px;height:42px;border-radius:14px;font-size:18px;cursor:pointer;color:var(--rose-deep);
+  display:grid;place-items:center;box-shadow:var(--shadow-soft);transition:transform .15s ease;
+}
+.icon-btn:active{transform:scale(.92);}
+.icon-btn:focus-visible{outline:3px solid var(--rose);outline-offset:2px;}
+
+main.stage{
+  width:100%;max-width:520px;flex:1;display:flex;flex-direction:column;justify-content:center;
+  padding:8px 20px calc(28px + env(safe-area-inset-bottom)) 20px;
+}
+
+/* ---------- cards & typography ---------- */
+.card{
+  background:var(--white-glass);backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.7);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:30px 26px;position:relative;overflow:hidden;
+}
+.card::after{content:"";position:absolute;inset:0;border-radius:var(--radius);border:1px solid rgba(200,162,76,.35);pointer-events:none;}
+.eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--rose-deep);font-weight:700;margin:0 0 10px;}
+h1,h2,h3{font-family:var(--serif);font-weight:600;color:var(--rose-ink);margin:0 0 .4em;line-height:1.12;}
+h1{font-size:clamp(28px,8vw,40px);}
+h2{font-size:clamp(23px,6.4vw,30px);}
+h3{font-size:19px;}
+p{margin:0 0 1em;}
+p:last-child{margin-bottom:0;}
+.lead{font-size:17px;color:var(--ink);}
+.muted{color:var(--ink-soft);font-size:14px;}
+.script{font-family:var(--script);color:var(--rose-deep);}
+.center{text-align:center;}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  font-family:var(--sans);font-size:17px;font-weight:700;letter-spacing:.01em;
+  color:#fff;background:linear-gradient(135deg,var(--rose) 0%,var(--rose-deep) 100%);
+  border:none;border-radius:999px;padding:16px 26px;width:100%;cursor:pointer;
+  box-shadow:0 14px 26px -12px rgba(196,76,110,.8);
+  transition:transform .14s ease, box-shadow .2s ease, filter .2s ease;
+  -webkit-user-select:none;user-select:none;
+}
+.btn:hover{filter:brightness(1.04);}
+.btn:active{transform:translateY(2px) scale(.985);box-shadow:0 8px 16px -10px rgba(196,76,110,.8);}
+.btn:focus-visible{outline:3px solid var(--gold);outline-offset:3px;}
+.btn.ghost{background:transparent;color:var(--rose-deep);border:1.5px solid rgba(196,76,110,.4);box-shadow:none;font-size:15px;padding:13px 22px;}
+.btn.ghost:hover{background:rgba(226,104,138,.08);filter:none;}
+.btn.gold{background:linear-gradient(135deg,var(--gold-soft),var(--gold));color:#5b4418;box-shadow:0 14px 26px -12px rgba(200,162,76,.8);}
+.btn-row{display:flex;gap:10px;margin-top:18px;}
+.btn-row .btn{width:auto;flex:1;}
+.btn-stack{display:flex;flex-direction:column;gap:12px;margin-top:22px;}
+
+/* ---------- stamp ---------- */
+.stamp{
+  position:absolute;top:16px;right:-6px;transform:rotate(9deg);
+  font-family:var(--serif);font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--rose-deep);border:2.5px solid var(--rose-deep);border-radius:10px;
+  padding:7px 11px;opacity:.72;text-align:center;line-height:1.15;max-width:150px;
+  box-shadow:inset 0 0 0 1px rgba(196,76,110,.25);
+}
+.stamp.pop{animation:stampIn .6s cubic-bezier(.2,1.4,.4,1) both;}
+@keyframes stampIn{0%{opacity:0;transform:rotate(9deg) scale(2.4);}60%{opacity:.9;}100%{opacity:.72;transform:rotate(9deg) scale(1);}}
+
+/* ---------- alert banner (Level 1) ---------- */
+.alert{
+  background:linear-gradient(135deg,#fff,#FFF0EC);border:1.5px dashed var(--rose);
+  border-radius:18px;padding:16px 18px;margin:4px 0 18px;font-size:15px;
+}
+.charge{display:flex;gap:10px;align-items:flex-start;margin:9px 0;font-size:15px;}
+.charge .b{color:var(--rose);flex:none;margin-top:1px;}
+
+/* ---------- quiz ---------- */
+.q-count{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700;}
+.options{display:flex;flex-direction:column;gap:12px;margin-top:18px;}
+.option{
+  text-align:left;background:#fff;border:1.5px solid rgba(196,76,110,.18);border-radius:18px;
+  padding:15px 17px;font-size:16px;color:var(--ink);cursor:pointer;width:100%;
+  display:flex;gap:12px;align-items:center;transition:border-color .15s,transform .12s,background .15s;
+  font-family:var(--sans);
+}
+.option .k{font-family:var(--serif);font-weight:700;color:var(--rose-deep);background:var(--blush);border-radius:10px;width:30px;height:30px;flex:none;display:grid;place-items:center;font-size:15px;}
+.option:hover{border-color:var(--rose);background:#FFF7F4;}
+.option:active{transform:scale(.99);}
+.option:focus-visible{outline:3px solid var(--rose);outline-offset:2px;}
+.option.chosen{border-color:var(--rose);background:linear-gradient(135deg,#FFF3F0,#FDE7E1);}
+.option[disabled]{cursor:default;opacity:.55;}
+.option.chosen[disabled]{opacity:1;}
+.reaction{
+  margin-top:18px;background:linear-gradient(135deg,#FFF7F4,#FBE6E0);border:1px solid rgba(200,162,76,.4);
+  border-radius:18px;padding:16px 18px;font-size:16px;color:var(--rose-ink);
+  animation:fadeUp .5s both;
+}
+.reaction .tag{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:700;display:block;margin-bottom:6px;}
+
+/* ---------- photo elements ---------- */
+.photo-frame{
+  position:relative;border-radius:22px;overflow:hidden;background:linear-gradient(135deg,var(--blush),var(--peach));
+  box-shadow:var(--shadow-soft);border:3px solid #fff;
+}
+.photo-frame img{display:block;width:100%;height:100%;object-fit:cover;}
+.photo-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--rose-deep);text-align:center;padding:18px;}
+.photo-ph .big{font-size:30px;}
+.photo-ph .cap{font-size:12px;color:var(--rose-ink);opacity:.8;max-width:85%;}
+
+/* gallery */
+.gallery{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px;}
+.g-item{position:relative;aspect-ratio:3/4;cursor:pointer;border-radius:22px;}
+.g-item .photo-frame{position:absolute;inset:0;}
+.g-item .seal{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;
+  background:linear-gradient(160deg,rgba(226,104,138,.86),rgba(196,76,110,.9));color:#fff;
+  border-radius:22px;text-align:center;padding:14px;transition:opacity .5s ease;z-index:2;
+  border:3px solid #fff;
+}
+.g-item .seal .lbl{font-family:var(--serif);font-weight:700;font-size:15px;letter-spacing:.04em;}
+.g-item .seal .hint{font-size:11px;opacity:.9;letter-spacing:.08em;text-transform:uppercase;}
+.g-item .seal .heart{font-size:26px;animation:beat 1.8s ease-in-out infinite;}
+.g-item.open .seal{opacity:0;pointer-events:none;}
+.g-item .note{
+  position:absolute;left:0;right:0;bottom:0;background:linear-gradient(0deg,rgba(91,58,66,.92),rgba(91,58,66,0));
+  color:#fff;padding:30px 14px 14px;font-size:13.5px;border-radius:0 0 22px 22px;z-index:3;
+  opacity:0;transform:translateY(8px);transition:opacity .5s ease .15s,transform .5s ease .15s;
+}
+.g-item .note .ex{display:block;font-family:var(--serif);font-weight:700;color:var(--gold-soft);font-size:12px;letter-spacing:.1em;margin-bottom:3px;}
+.g-item.open .note{opacity:1;transform:translateY(0);}
+.gallery-foot{margin-top:18px;}
+
+/* ---------- love meter ---------- */
+.meter-wrap{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:10px;}
+.big-heart{
+  font-size:96px;line-height:1;cursor:pointer;user-select:none;-webkit-user-select:none;
+  filter:drop-shadow(0 12px 18px rgba(196,76,110,.4));transition:transform .12s ease;
+  background:none;border:none;padding:6px;
+}
+.big-heart:active{transform:scale(.86);}
+.big-heart.full{animation:beat 1.1s ease-in-out infinite;}
+.big-heart:focus-visible{outline:3px solid var(--rose);outline-offset:6px;border-radius:50%;}
+.meter-readout{font-family:var(--serif);font-size:40px;color:var(--rose-deep);font-weight:700;}
+.meter-track{width:100%;height:20px;border-radius:999px;background:rgba(196,76,110,.14);overflow:hidden;margin:8px 0 4px;border:1px solid rgba(200,162,76,.35);}
+.meter-bar{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--gold-soft),var(--rose),var(--rose-deep));transition:width .5s cubic-bezier(.22,1,.36,1);}
+.meter-msg{min-height:52px;text-align:center;font-size:16px;color:var(--rose-ink);animation:fadeUp .4s both;}
+.meter-hint{font-size:13px;color:var(--ink-soft);}
+
+/* ---------- courtroom ---------- */
+.gavel{font-size:40px;text-align:center;margin-bottom:4px;}
+.verdicts{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
+.verdict-btn{
+  width:100%;text-align:left;background:#fff;border:1.5px solid rgba(196,76,110,.2);border-radius:18px;
+  padding:16px 18px;font-size:16px;font-weight:600;color:var(--ink);cursor:pointer;font-family:var(--sans);
+  transition:transform .12s,border-color .15s,background .15s;display:flex;justify-content:space-between;align-items:center;gap:10px;
+}
+.verdict-btn:hover{border-color:var(--rose);background:#FFF7F4;}
+.verdict-btn:active{transform:scale(.99);}
+.verdict-btn:focus-visible{outline:3px solid var(--rose);outline-offset:2px;}
+
+/* ---------- love notes (Level 6) ---------- */
+.locks{display:flex;flex-direction:column;gap:12px;margin-top:18px;}
+.lock{
+  background:#fff;border:1.5px solid rgba(200,162,76,.4);border-radius:18px;overflow:hidden;
+  transition:border-color .2s;
+}
+.lock .head{
+  display:flex;align-items:center;gap:13px;padding:16px 18px;cursor:pointer;width:100%;border:none;background:none;
+  text-align:left;font-family:var(--sans);font-size:15px;color:var(--rose-deep);font-weight:700;
+}
+.lock .head:focus-visible{outline:3px solid var(--rose);outline-offset:-3px;}
+.lock .head .ico{font-size:22px;transition:transform .4s ease;}
+.lock.open .head .ico{transform:rotate(-8deg) scale(1.1);}
+.lock .body{max-height:0;overflow:hidden;transition:max-height .5s ease;}
+.lock .body-inner{padding:0 18px 18px;font-size:16px;color:var(--ink);line-height:1.55;}
+.lock.open .body{max-height:320px;}
+.lock.open{border-color:var(--rose);}
+.notes-count{text-align:center;font-size:13px;color:var(--ink-soft);margin-top:14px;}
+
+/* ---------- challenge (Level 7) ---------- */
+.challenge-grid{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
+.challenge-result{
+  margin-top:20px;background:linear-gradient(135deg,#FFF7F4,#FBE6E0);border:1px solid rgba(200,162,76,.4);
+  border-radius:18px;padding:18px;text-align:center;font-size:16px;color:var(--rose-ink);animation:fadeUp .5s both;
+}
+.challenge-result .big{font-size:34px;display:block;margin-bottom:8px;}
+.copy-note{margin-top:16px;}
+.copy-feedback{font-size:13px;color:var(--rose-deep);text-align:center;margin-top:8px;min-height:18px;}
+
+/* ---------- final letter ---------- */
+#app.finale{background:transparent;}
+.finale-bg{
+  position:fixed;inset:0;z-index:0;background-size:cover;background-position:center;
+  opacity:0;transition:opacity 1.6s ease;
+}
+.finale-veil{
+  position:fixed;inset:0;z-index:0;opacity:0;transition:opacity 1.6s ease;
+  background:linear-gradient(180deg,rgba(91,40,52,.4) 0%,rgba(120,55,70,.6) 40%,rgba(60,28,38,.86) 100%);
+}
+body.finale-on .finale-bg{opacity:.5;}
+body.finale-on .finale-veil{opacity:1;}
+body.finale-on{background:#3a1b26;}
+.letter-card{
+  background:linear-gradient(180deg,rgba(255,250,246,.96),rgba(253,237,230,.96));
+  border:1px solid rgba(200,162,76,.5);border-radius:var(--radius);padding:32px 26px;
+  box-shadow:0 30px 70px -20px rgba(0,0,0,.6);animation:fadeUp 1s both;
+}
+.letter-card h2{font-size:26px;}
+.letter-body{font-size:16.5px;line-height:1.7;color:var(--ink);white-space:pre-wrap;font-family:var(--serif);}
+.letter-body .signoff{font-family:var(--script);font-size:24px;color:var(--rose-deep);display:block;margin-top:4px;}
+.verdict-final{
+  text-align:center;font-family:var(--serif);font-weight:700;color:var(--rose-deep);font-size:19px;
+  letter-spacing:.02em;margin:24px 0 4px;line-height:1.4;
+}
+
+/* ---------- completion ---------- */
+.trophy{font-size:64px;text-align:center;animation:beat 1.6s ease-in-out infinite;}
+
+/* ---------- modal / setup ---------- */
+.overlay{position:fixed;inset:0;z-index:50;background:rgba(91,40,52,.5);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center;padding:0;animation:fadeIn .25s both;}
+.sheet{
+  background:var(--cream);width:100%;max-width:520px;max-height:92svh;max-height:92vh;overflow-y:auto;
+  border-radius:26px 26px 0 0;padding:24px 22px calc(28px + env(safe-area-inset-bottom));box-shadow:0 -20px 60px rgba(0,0,0,.3);
+  animation:sheetUp .35s cubic-bezier(.22,1,.36,1) both;
+}
+@media(min-width:560px){.overlay{align-items:center;}.sheet{border-radius:26px;max-height:88vh;}}
+.sheet h2{font-size:22px;}
+.sheet .field{margin:16px 0;}
+.sheet label{display:block;font-size:13px;font-weight:700;color:var(--rose-deep);letter-spacing:.04em;margin-bottom:6px;}
+.sheet input[type=text],.sheet textarea{
+  width:100%;border:1.5px solid rgba(196,76,110,.3);border-radius:14px;padding:12px 14px;font-size:15px;
+  font-family:var(--sans);color:var(--ink);background:#fff;
+}
+.sheet textarea{min-height:150px;resize:vertical;line-height:1.5;}
+.sheet input:focus,.sheet textarea:focus{outline:none;border-color:var(--rose);}
+.photo-setup{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;}
+.ps-item{border:1.5px dashed rgba(196,76,110,.35);border-radius:16px;padding:10px;text-align:center;background:#fff;}
+.ps-thumb{width:100%;aspect-ratio:3/4;border-radius:11px;overflow:hidden;background:linear-gradient(135deg,var(--blush),var(--peach));margin-bottom:8px;display:grid;place-items:center;color:var(--rose-deep);}
+.ps-thumb img{width:100%;height:100%;object-fit:cover;}
+.ps-item .nm{font-size:11px;color:var(--ink-soft);margin-bottom:6px;letter-spacing:.08em;text-transform:uppercase;}
+.ps-item .pick{font-size:13px;color:var(--rose-deep);font-weight:700;cursor:pointer;display:inline-block;padding:6px 10px;border-radius:10px;background:var(--blush);}
+.ps-item input[type=text]{font-size:12px;padding:7px 9px;margin-top:7px;}
+.ps-item .clr{font-size:11px;color:var(--ink-soft);background:none;border:none;cursor:pointer;margin-top:5px;text-decoration:underline;}
+.sheet .hintline{font-size:12px;color:var(--ink-soft);margin-top:4px;}
+.sheet-foot{display:flex;gap:10px;margin-top:22px;position:sticky;bottom:0;background:var(--cream);padding:14px 0 calc(6px + env(safe-area-inset-bottom));border-top:1px solid rgba(196,76,110,.18);box-shadow:0 -10px 18px -6px var(--cream);}
+
+/* ---------- fx layers ---------- */
+#fx{position:fixed;inset:0;pointer-events:none;z-index:40;overflow:hidden;}
+.fx-heart{position:absolute;bottom:-40px;font-size:24px;animation:floatUp linear forwards;will-change:transform,opacity;}
+.confetti{position:absolute;top:-20px;width:9px;height:14px;border-radius:2px;animation:confFall linear forwards;will-change:transform;}
+
+/* ---------- keyframes ---------- */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes sheetUp{from{transform:translateY(40px);opacity:.6;}to{transform:translateY(0);opacity:1;}}
+@keyframes beat{0%,100%{transform:scale(1);}14%{transform:scale(1.16);}28%{transform:scale(1);}42%{transform:scale(1.1);}}
+@keyframes floatUp{0%{transform:translateY(0) rotate(0);opacity:0;}10%{opacity:.95;}100%{transform:translateY(-112svh) rotate(40deg);opacity:0;}}
+@keyframes confFall{0%{transform:translateY(0) rotateZ(0);opacity:1;}100%{transform:translateY(112svh) rotateZ(540deg);opacity:.9;}}
+.enter{animation:fadeUp .55s cubic-bezier(.22,1,.36,1) both;}
+
+/* reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;}
+  .big-heart.full,.g-item .seal .heart,.trophy{animation:none;}
+  #fx{display:none;}
+}
+</style>
+</head>
+<body>
+<div class="bg-glow" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<div id="app">
+  <header class="topbar" id="topbar">
+    <div class="progress-wrap">
+      <span class="progress-label" id="progressLabel">Welcome</span>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+    <button class="icon-btn" id="setupBtn" title="Setup & personalize" aria-label="Open setup and personalization">⚙️</button>
+  </header>
+  <main class="stage" id="stage" aria-live="polite"></main>
+</div>
+
+<div class="finale-bg" id="finaleBg" aria-hidden="true"></div>
+<div class="finale-veil" aria-hidden="true"></div>
+<div id="fx" aria-hidden="true"></div>
+
+<script>
+/* ===========================================================================
+   💌  PERSONALIZATION — EDIT ANYTHING BELOW (or use the ⚙️ Setup button)
+   ===========================================================================
+   Use {name} anywhere and it will be replaced with her nickname everywhere.
+   You can also change the nickname + photos + final letter live in the app
+   via the Setup (⚙️) panel; those changes are saved privately on the device.
+=========================================================================== */
+const CONFIG = {
+  // --- names ---
+  wifeyName: "Wifeey",              // her nickname: "Baby", "Princess", "Jaan"...
+  husbandName: "your husband",      // used in a few lines; keep lowercase-friendly
+  signoff: "Your slightly hopeless, completely in-love husband",
+
+  // Which photo (0-based) to feature on the final letter screen. Default: last.
+  finalePhotoIndex: null,           // null = use the last photo you added
+
+  // --- LEVEL 1: the complaint ---
+  complaint: {
+    charges: [
+      "Not giving {name} enough attention.",
+      "Being suspiciously busy when cuddles are required.",
+      "Failing to provide the legally mandated daily quota of kisses.",
+      "Making {name} miss him too much.",
+      "Being so cute that {name} gets angry for absolutely no reason. 🥹",
+    ],
+  },
+
+  // --- LEVEL 2: quiz --- (best answers get the sweetest reaction; nothing is a "fail")
+  quiz: [
+    {
+      q: "What happens to your husband when he sees your photograph?",
+      options: [
+        { t: "He continues his day normally.", r: "Incorrect, obviously. Nobody continues normally after seeing that face. Exhibit will be filed later." },
+        { t: "He smiles like an idiot and looks at it again.", r: "Guilty. Documented smiling incidents: countless. He has no defence." , best:true},
+        { t: "He forgets what he was doing.", r: "Accurate. He once walked into a door. Worth it, he says.", best:true },
+      ],
+    },
+    {
+      q: "What does your husband secretly want most?",
+      options: [
+        { t: "Eight hours of uninterrupted sleep.", r: "Cute theory. But he'd trade the sleep for five more minutes with you every single time." },
+        { t: "A lifetime subscription to your hugs.", r: "Correct. Auto-renewing. No cancellation button exists. He checked.", best:true },
+        { t: "To win every argument.", r: "Ha. He gave up on that the day he married you. Happily." },
+      ],
+    },
+    {
+      q: "If your husband could teleport anywhere right now, where would he go?",
+      options: [
+        { t: "The mountains.", r: "Nice view. But not the view he's thinking about." },
+        { t: "His favourite restaurant.", r: "Tempting. Still second place to a certain person's company." },
+        { t: "Straight into your arms.", r: "Verified destination. Shortest distance between him and happy.", best:true },
+      ],
+    },
+    {
+      q: "What is your husband's biggest weakness?",
+      options: [
+        { t: "Food.", r: "A strong contender. But it has never once made him forget his own name." },
+        { t: "Your smile.", r: "Case-breaking evidence. One smile and the man is completely useless. In the best way.", best:true },
+        { t: "Your angry-but-cute face.", r: "Fatal weakness confirmed. He cannot take it seriously and he's so sorry (not sorry).", best:true },
+      ],
+    },
+    {
+      q: "What is his favourite place in the world?",
+      options: [
+        { t: "A luxury vacation.", r: "Lovely. But he'd book it only if you're the plus-one." },
+        { t: "His comfort zone.", r: "Funny thing — you became his comfort zone." },
+        { t: "Anywhere you are.", r: "The whole truth. Home isn't a place for him anymore. It's you.", best:true },
+      ],
+    },
+  ],
+
+  // --- LEVEL 3: gallery captions (Exhibit A–E). Edit freely; add/remove items. ---
+  gallery: [
+    { label:"Exhibit A", note:"Evidence that you can make me smile without even trying." },
+    { label:"Exhibit B", note:"The face I would choose in every lifetime." },
+    { label:"Exhibit C", note:"My favourite distraction. Yes, even when I'm supposed to be working." },
+    { label:"Exhibit D", note:"The girl who somehow manages to be cute even when she's pretending to be angry with me." },
+    { label:"Exhibit E", note:"If loving you were a full-time job, I'd happily work overtime." },
+  ],
+
+  // --- LEVEL 4: love meter milestones ---
+  loveMeter: [
+    { at:25,  msg:"He thinks about you more often than he admits." },
+    { at:50,  msg:"Your messages can change his entire mood." },
+    { at:75,  msg:"He misses you even when he's just seen you." },
+    { at:100, msg:"SYSTEM OVERLOAD. Husband is catastrophically, ridiculously, permanently in love with {name}." },
+  ],
+
+  // --- LEVEL 5: courtroom verdicts ---
+  court: {
+    charges: [
+      "Failure to provide adequate cuddles.",
+      "Excessive thoughts about {name} without immediately informing her.",
+      "Missing {name} but sometimes forgetting to say it.",
+      "Being unable to resist her smile.",
+    ],
+    verdicts: [
+      { label:"GUILTY AS CHARGED", emoji:"😤",
+        r:"The court acknowledges the evidence. The husband is sentenced to unlimited cuddles, mandatory forehead kisses, and a lifetime of making {name} feel loved." },
+      { label:"GUILTY, BUT HE'S CUTE", emoji:"🥹",
+        r:"The court has been compromised by the accused's charm. Case postponed until the next cuddle session." },
+      { label:"INNOCENT BECAUSE HE LOVES ME", emoji:"❤️",
+        r:"The judge has accepted the most important piece of evidence: his heart belongs to {name}." },
+    ],
+  },
+
+  // --- LEVEL 6: unlockable love notes ---
+  loveNotes: [
+    "You are the person I want to tell everything to — even the smallest, most random things.",
+    "I don't just want the big romantic moments with you. I want the ordinary days, the silly conversations, the quiet evenings, and all the little moments in between.",
+    "Even when I don't express it perfectly, you matter to me more than I can explain.",
+    "Your happiness matters to me. I want you to feel loved, wanted, safe, and cherished with me.",
+    "And if I ever get so caught up in life that I forget to show you enough affection, remind me. I want to keep learning how to love you better.",
+  ],
+
+  // --- LEVEL 7: the ultimate challenge ---
+  challenges: [
+    { label:"I REQUIRE IMMEDIATE CUDDLES", emoji:"🫂",
+      r:"Request approved. Husband is hereby ordered to provide one extremely long hug. No appeals allowed." },
+    { label:"PAY MY KISS TAX", emoji:"💋",
+      r:"Payment initiated. Warning: husband may refuse to stop at the legally required minimum." },
+    { label:"I WANT ALL YOUR ATTENTION", emoji:"👀",
+      r:"Phone down. Eyes on {name}. World temporarily paused. You have my attention, my heart, and probably my last brain cell." },
+  ],
+  // message she can copy and send back to you
+  copyMessage: "Verdict: guilty of being too cute. Sentence: come here and give me that hug you owe me. ❤️",
+
+  // --- FINAL LEVEL: the letter (edit freely; also editable in Setup) ---
+  letterGreeting: "My {name},",
+  letter:
+`So… the investigation is over.
+
+You came here to investigate whether your husband loves you enough. And honestly — how could I ever explain something this big through a silly little game?
+
+I know I can be distracted sometimes. I know I may not always express my affection in the exact way you want, at the exact moment you want it. But never mistake my imperfect expressions for an imperfect love.
+
+You are not just someone I love. You are the person I want beside me through all the ordinary, beautiful, chaotic, and unexpected moments of life.
+
+I want to make you laugh when you're upset, hold you when you need comfort, celebrate every little victory with you, and keep choosing you even on the most ordinary days.
+
+I love your smile, your little moods, your dramatic complaints, your cuteness, and all the tiny things that make you YOU.
+
+And yes, Your Highness — I officially accept that your husband needs to improve his affection delivery system. 😂❤️
+
+So here is my final verdict:
+
+You are loved.
+You are wanted.
+You are cherished.
+You are my favourite person.
+
+And no matter how many times you file a complaint against me, I will keep finding new ways to remind you how special you are to me.
+
+Now come here, {name}. Your husband owes you a hug. ❤️`,
+};
+
+/* =========================================================================
+   Below is the engine. You usually don't need to edit past this point. :)
+========================================================================= */
+
+// ---- personalization overrides saved on device (nickname / letter) ----
+const LS_KEY = "wifeyGame.v1";
+function loadOverrides(){
+  try{ return JSON.parse(localStorage.getItem(LS_KEY)) || {}; }catch(e){ return {}; }
+}
+function saveOverrides(o){ try{ localStorage.setItem(LS_KEY, JSON.stringify(o)); }catch(e){} }
+let OV = loadOverrides();
+
+function name(){ return (OV.wifeyName && OV.wifeyName.trim()) || CONFIG.wifeyName; }
+function tmpl(s){ return String(s).replace(/\{name\}/g, name()); }
+function letterText(){ return OV.letter != null ? OV.letter : CONFIG.letter; }
+function captionFor(i){ return (OV.captions && OV.captions[i] != null) ? OV.captions[i] : tmpl(CONFIG.gallery[i] ? CONFIG.gallery[i].note : ""); }
+
+// ---- photo storage (IndexedDB for blobs; falls back gracefully) ----
+const PhotoStore = (()=>{
+  const SLOTS = 6;            // how many photo slots the game supports
+  let db=null, urls={}, ready=false;
+  function open(){
+    return new Promise((res)=>{
+      if(!("indexedDB" in window)){ res(null); return; }
+      const rq = indexedDB.open("wifeyPhotos", 1);
+      rq.onupgradeneeded = ()=>{ rq.result.createObjectStore("p"); };
+      rq.onsuccess = ()=>res(rq.result);
+      rq.onerror = ()=>res(null);
+    });
+  }
+  async function init(){
+    db = await open();
+    // load any stored blobs -> object urls
+    if(db){
+      await Promise.all(Array.from({length:SLOTS},(_,i)=>new Promise((res)=>{
+        try{
+          const t=db.transaction("p","readonly").objectStore("p").get(i);
+          t.onsuccess=()=>{ if(t.result){ urls[i]=URL.createObjectURL(t.result); } res(); };
+          t.onerror=()=>res();
+        }catch(e){ res(); }
+      })));
+    }
+    // folder fallback: probe photos/1.jpg ... only for slots without an upload
+    await Promise.all(Array.from({length:SLOTS},(_,i)=>probeFolder(i)));
+    ready=true;
+  }
+  function probeFolder(i){
+    return new Promise((res)=>{
+      if(urls[i]){ res(); return; }
+      const exts=["jpg","jpeg","png","webp"]; let idx=0;
+      const tryNext=()=>{
+        if(idx>=exts.length){ res(); return; }
+        const src="photos/"+(i+1)+"."+exts[idx++];
+        const img=new Image();
+        img.onload=()=>{ if(!urls[i]) urls[i]=src; res(); };
+        img.onerror=tryNext;
+        img.src=src;
+      };
+      tryNext();
+    });
+  }
+  async function set(i, file){
+    const url=URL.createObjectURL(file);
+    urls[i]=url;
+    if(db){ try{ db.transaction("p","readwrite").objectStore("p").put(file,i); }catch(e){} }
+    return url;
+  }
+  function clear(i){
+    delete urls[i];
+    if(db){ try{ db.transaction("p","readwrite").objectStore("p").delete(i); }catch(e){} }
+  }
+  function get(i){ return urls[i]||null; }
+  function count(){ return Object.keys(urls).length; }
+  function firstUrl(){ for(let i=0;i<SLOTS;i++){ if(urls[i]) return urls[i]; } return null; }
+  function lastUrl(){ for(let i=SLOTS-1;i>=0;i--){ if(urls[i]) return urls[i]; } return null; }
+  return { init, set, get, clear, count, firstUrl, lastUrl, SLOTS, isReady:()=>ready };
+})();
+
+// ---- tiny DOM helper ----
+function el(html){ const d=document.createElement("div"); d.innerHTML=html.trim(); return d.firstElementChild; }
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function photoHTML(i, phLabel){
+  const url=PhotoStore.get(i);
+  if(url){ return `<div class="photo-frame"><img src="${url}" alt="A photo of ${esc(name())}" loading="lazy"></div>`; }
+  return `<div class="photo-frame"><div class="photo-ph"><div class="big">🌸</div><div class="cap">${esc(phLabel||"Add a photo in Setup ⚙️")}</div></div></div>`;
+}
+
+// ---- motion / fx ----
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fx=document.getElementById("fx");
+function floatHearts(n=14){
+  if(reduceMotion) return;
+  const set=["❤️","💖","💗","🌸","✨","💕"];
+  for(let i=0;i<n;i++){
+    const h=document.createElement("div");
+    h.className="fx-heart"; h.textContent=set[Math.floor(Math.random()*set.length)];
+    h.style.left=Math.random()*100+"vw";
+    h.style.fontSize=(16+Math.random()*22)+"px";
+    const dur=4+Math.random()*3; h.style.animationDuration=dur+"s";
+    h.style.animationDelay=(Math.random()*1.2)+"s";
+    fx.appendChild(h); setTimeout(()=>h.remove(),(dur+1.4)*1000);
+  }
+}
+function confetti(n=90){
+  if(reduceMotion){ floatHearts(10); return; }
+  const colors=["#E2688A","#C44C6E","#E7CE92","#C8A24C","#FAD6C0","#FBE0DC","#fff"];
+  for(let i=0;i<n;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=colors[Math.floor(Math.random()*colors.length)];
+    const dur=2.6+Math.random()*2.2; c.style.animationDuration=dur+"s";
+    c.style.animationDelay=(Math.random()*.6)+"s";
+    c.style.transform="rotate("+(Math.random()*360)+"deg)";
+    if(Math.random()>.6) c.style.borderRadius="50%";
+    fx.appendChild(c); setTimeout(()=>c.remove(),(dur+1)*1000);
+  }
+  floatHearts(16);
+}
+
+// =====================  LEVELS  =====================
+const stage=document.getElementById("stage");
+const progressFill=document.getElementById("progressFill");
+const progressLabel=document.getElementById("progressLabel");
+const app=document.getElementById("app");
+
+const LEVELS=[
+  welcome,       // 0
+  level1,        // 1 complaint
+  level2,        // 2 quiz
+  level3,        // 3 gallery
+  level4,        // 4 love meter
+  level5,        // 5 courtroom
+  level6,        // 6 love notes
+  level7,        // 7 challenge
+  finale,        // 8 letter + close
+  completion,    // 9
+];
+const STEP_NAMES=["Welcome","The Complaint","Know His Heart","The Evidence","Love Meter","The Wifeey Court","Unlock His Heart","The Final Demand","The Real Reason","Case Closed"];
+
+let current=0;
+function go(n){
+  current=Math.max(0,Math.min(LEVELS.length-1,n));
+  // leaving finale -> clean finale styling
+  if(current!==8){ document.body.classList.remove("finale-on"); document.getElementById("finaleBg").style.backgroundImage=""; }
+  updateProgress();
+  stage.innerHTML="";
+  window.scrollTo({top:0,behavior:"instant" in window?"instant":"auto"});
+  LEVELS[current]();
+}
+function updateProgress(){
+  const pct=Math.round((current/(LEVELS.length-1))*100);
+  progressFill.style.width=pct+"%";
+  progressLabel.textContent=STEP_NAMES[current]||"";
+}
+
+function mount(node){ stage.appendChild(node); }
+function navRow(backTo, nextTo, nextLabel){
+  const row=el(`<div class="btn-row"></div>`);
+  if(backTo!=null){ const b=el(`<button class="btn ghost">‹ Back</button>`); b.onclick=()=>go(backTo); row.appendChild(b); }
+  if(nextTo!=null){ const n=el(`<button class="btn">${nextLabel||"Next ›"}</button>`); n.onclick=()=>go(nextTo); row.appendChild(n); }
+  return row;
+}
+
+// ---------- 0: WELCOME ----------
+function welcome(){
+  const hero=PhotoStore.firstUrl();
+  const heroHTML = hero
+    ? `<div class="photo-frame" style="aspect-ratio:4/5;margin:0 0 20px;"><img src="${hero}" alt="A photo of ${esc(name())}"></div>`
+    : `<div class="photo-frame" style="aspect-ratio:4/5;margin:0 0 20px;"><div class="photo-ph"><div class="big">💗</div><div class="cap">Tap ⚙️ Setup to add ${esc(name())}'s photos</div></div></div>`;
+  const c=el(`<section class="card center enter">
+    <p class="eyebrow">Highly Confidential · Wife Matters Division</p>
+    ${heroHTML}
+    <h1>Operation:<br>My ${esc(name())} Deserves 100% Attention</h1>
+    <p class="lead" style="margin-top:10px;">A highly confidential investigation into whether your husband actually loves you… or is just pretending to be busy.</p>
+    <div class="btn-stack">
+      <button class="btn" id="startBtn">LET'S INVESTIGATE 💋</button>
+    </div>
+    <p class="muted" style="margin-top:14px;">⚠️ Warning: excessive cuteness ahead.</p>
+  </section>`);
+  c.querySelector("#startBtn").onclick=()=>{ floatHearts(10); go(1); };
+  mount(c);
+}
+
+// ---------- 1: THE COMPLAINT ----------
+function level1(){
+  const charges=CONFIG.complaint.charges.map(ch=>`<div class="charge"><span class="b">✦</span><span>${esc(tmpl(ch))}</span></div>`).join("");
+  const c=el(`<section class="card enter">
+    <div class="stamp pop">Highly<br>Serious<br>Wife Matter</div>
+    <p class="eyebrow">🚨 Emergency Alert 🚨</p>
+    <h2>The Official ${esc(name())} Complaint</h2>
+    <div class="alert">A complaint has been filed against your husband. Charges include:</div>
+    ${charges}
+    <p style="margin-top:18px;font-size:15px;">The accused has <strong>60 seconds</strong> to prove his innocence. (The court is flexible. Take your time, Your Honour.)</p>
+    <p class="script" style="font-size:22px;margin-top:6px;">Are you ready to investigate?</p>
+    <div class="btn-stack">
+      <button class="btn" id="go2">Begin the investigation 💋</button>
+    </div>
+  </section>`);
+  c.querySelector("#go2").onclick=()=>go(2);
+  mount(c);
+  mount(navRow(0,null));
+}
+
+// ---------- 2: QUIZ ----------
+let quizIdx=0;
+function level2(){ quizIdx=0; renderQuestion(); }
+function renderQuestion(){
+  stage.innerHTML="";
+  const item=CONFIG.quiz[quizIdx];
+  const total=CONFIG.quiz.length;
+  const c=el(`<section class="card enter">
+    <p class="q-count">Question ${quizIdx+1} of ${total}</p>
+    <h2 style="margin-top:8px;">${esc(tmpl(item.q))}</h2>
+    <div class="options" role="group" aria-label="Choose an answer"></div>
+    <div class="holder"></div>
+  </section>`);
+  const opts=c.querySelector(".options");
+  const holder=c.querySelector(".holder");
+  item.options.forEach((o,i)=>{
+    const key=String.fromCharCode(65+i);
+    const b=el(`<button class="option"><span class="k">${key}</span><span>${esc(tmpl(o.t))}</span></button>`);
+    b.onclick=()=>{
+      Array.from(opts.children).forEach(x=>{x.disabled=true;x.classList.remove("chosen");});
+      b.classList.add("chosen");
+      if(o.best) floatHearts(8);
+      holder.innerHTML="";
+      const react=el(`<div class="reaction"><span class="tag">${o.best?"The court agrees ❤️":"Objection… overruled 😏"}</span>${esc(tmpl(o.r))}</div>`);
+      holder.appendChild(react);
+      const last = quizIdx===total-1;
+      const btn=el(`<button class="btn" style="margin-top:16px;">${last?"See the evidence ›":"Next question ›"}</button>`);
+      btn.onclick=()=>{ if(last){ go(3);} else { quizIdx++; renderQuestion(); } };
+      holder.appendChild(btn);
+      react.scrollIntoView({behavior:reduceMotion?"auto":"smooth",block:"nearest"});
+    };
+    opts.appendChild(b);
+  });
+  mount(c);
+  mount(navRow(quizIdx===0?1:null,null));
+}
+
+// ---------- 3: GALLERY ----------
+function level3(){
+  const items=CONFIG.gallery.map((g,i)=>{
+    return `<div class="g-item" data-i="${i}" tabindex="0" role="button" aria-label="${esc(g.label)} — tap to reveal the love note">
+      ${photoHTML(i, g.label)}
+      <div class="seal"><span class="heart">❤️</span><span class="lbl">${esc(g.label)}</span><span class="hint">Tap to reveal</span></div>
+      <div class="note"><span class="ex">${esc(g.label)}</span><span class="txt">${esc(captionFor(i))}</span></div>
+    </div>`;
+  }).join("");
+  const c=el(`<section class="card enter">
+    <p class="eyebrow">Exhibit Room</p>
+    <h2>The ${esc(name())} Photo Gallery</h2>
+    <p class="lead">The prosecution submits the following evidence. Tap each one to reveal why you're the highlight of every single day.</p>
+    <div class="gallery">${items}</div>
+    <p class="muted center gallery-foot" id="galNote">No photos yet? Tap ⚙️ Setup to add hers — the notes work either way.</p>
+  </section>`);
+  let opened=0;
+  c.querySelectorAll(".g-item").forEach(gi=>{
+    const reveal=()=>{ if(!gi.classList.contains("open")){ gi.classList.add("open"); opened++; floatHearts(4);
+      if(opened>=CONFIG.gallery.length){ c.querySelector("#galNote").textContent="Every exhibit reviewed. The evidence is… overwhelming. 💗"; } } };
+    gi.addEventListener("click",reveal);
+    gi.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); reveal(); } });
+  });
+  mount(c);
+  mount(navRow(2,4,"To the Love Meter ›"));
+}
+
+// ---------- 4: LOVE METER ----------
+function level4(){
+  let val=0; const milestones=CONFIG.loveMeter.slice().sort((a,b)=>a.at-b.at);
+  let shown=new Set(); let done=false;
+  const c=el(`<section class="card center enter">
+    <p class="eyebrow">Instrumentation Lab</p>
+    <h2>The Husband's Love Meter</h2>
+    <p class="lead" id="status">Officially measured husband affection: <strong>UNKNOWN</strong>.</p>
+    <div class="meter-wrap">
+      <button class="big-heart" id="heart" aria-label="Tap the heart to run the love test">🤍</button>
+      <div class="meter-readout" id="readout">0%</div>
+      <div class="meter-track"><div class="meter-bar" id="bar"></div></div>
+      <div class="meter-msg" id="msg"></div>
+      <p class="meter-hint" id="hint">Tap the heart to run the test 👆</p>
+    </div>
+    <div class="holder" style="margin-top:4px;"></div>
+  </section>`);
+  const heart=c.querySelector("#heart"), bar=c.querySelector("#bar"), readout=c.querySelector("#readout"),
+        msg=c.querySelector("#msg"), hint=c.querySelector("#hint"), status=c.querySelector("#status"), holder=c.querySelector(".holder");
+  heart.onclick=()=>{
+    if(done) return;
+    val=Math.min(100,val+ (val<70?12:9) + Math.floor(Math.random()*4));
+    bar.style.width=val+"%"; readout.textContent=val+"%";
+    heart.textContent = val>=100?"❤️": val>=66?"❤️": val>=33?"💗":"🩷";
+    if(!reduceMotion) floatHearts(2);
+    milestones.forEach(m=>{ if(val>=m.at && !shown.has(m.at)){ shown.add(m.at); msg.textContent=tmpl(m.msg); } });
+    hint.textContent="Keep going… 💞";
+    if(val>=100){
+      done=true; val=100; bar.style.width="100%"; readout.textContent="100%";
+      heart.classList.add("full"); heart.textContent="❤️";
+      status.innerHTML="Officially measured husband affection: <strong>OFF THE CHARTS</strong>.";
+      hint.textContent=""; confetti(110);
+      const done2=el(`<button class="btn gold" style="margin-top:16px;">Call the court to order ›</button>`);
+      done2.onclick=()=>go(5); holder.appendChild(done2);
+      holder.scrollIntoView({behavior:reduceMotion?"auto":"smooth",block:"nearest"});
+    }
+  };
+  mount(c);
+  mount(navRow(3,null));
+}
+
+// ---------- 5: COURTROOM ----------
+function level5(){
+  const charges=CONFIG.court.charges.map(ch=>`<div class="charge"><span class="b">§</span><span>${esc(tmpl(ch))}</span></div>`).join("");
+  const c=el(`<section class="card enter">
+    <div class="gavel">⚖️</div>
+    <h2 class="center">Your Honour, the ${esc(name())} Court is now in session.</h2>
+    <p class="muted center">Presiding judge: Her Highness, ${esc(name())}. The accused: her hopeless husband.</p>
+    <div style="margin-top:18px;">${charges}</div>
+    <p class="script center" style="font-size:22px;margin-top:16px;">Deliver your verdict, Your Honour:</p>
+    <div class="verdicts"></div>
+    <div class="holder"></div>
+  </section>`);
+  const vr=c.querySelector(".verdicts"), holder=c.querySelector(".holder");
+  CONFIG.court.verdicts.forEach(v=>{
+    const b=el(`<button class="verdict-btn"><span>${esc(tmpl(v.label))}</span><span>${v.emoji}</span></button>`);
+    b.onclick=()=>{
+      Array.from(vr.children).forEach(x=>x.disabled=true);
+      b.style.borderColor="var(--rose)"; b.style.background="linear-gradient(135deg,#FFF3F0,#FDE7E1)";
+      floatHearts(8);
+      holder.innerHTML="";
+      const r=el(`<div class="challenge-result"><span class="big">${v.emoji}</span>${esc(tmpl(v.r))}</div>`);
+      holder.appendChild(r);
+      const next=el(`<button class="btn" style="margin-top:16px;">Unlock his heart ›</button>`);
+      next.onclick=()=>go(6); holder.appendChild(next);
+      r.scrollIntoView({behavior:reduceMotion?"auto":"smooth",block:"nearest"});
+    };
+    vr.appendChild(b);
+  });
+  mount(c);
+  mount(navRow(4,null));
+}
+
+// ---------- 6: LOVE NOTES ----------
+function level6(){
+  const notes=CONFIG.loveNotes.map((n,i)=>`
+    <div class="lock" data-i="${i}">
+      <button class="head" aria-expanded="false"><span class="ico">🔒</span><span>Locked love note #${i+1} — tap to open</span></button>
+      <div class="body"><div class="body-inner">${esc(tmpl(n))}</div></div>
+    </div>`).join("");
+  const c=el(`<section class="card enter">
+    <p class="eyebrow">Sealed Evidence</p>
+    <h2>Unlock Your Husband's Heart</h2>
+    <p class="lead">Five little truths, sealed until you open them. No rush — one at a time.</p>
+    <div class="locks">${notes}</div>
+    <p class="notes-count" id="nc">0 of ${CONFIG.loveNotes.length} unlocked</p>
+    <div class="holder"></div>
+  </section>`);
+  let open=0;
+  c.querySelectorAll(".lock").forEach(l=>{
+    const head=l.querySelector(".head");
+    head.onclick=()=>{
+      const isOpen=l.classList.toggle("open");
+      head.setAttribute("aria-expanded",isOpen?"true":"false");
+      l.querySelector(".ico").textContent=isOpen?"💝":"🔒";
+      head.querySelector("span:last-child").textContent=isOpen?("Love note #"+(parseInt(l.dataset.i)+1)):("Locked love note #"+(parseInt(l.dataset.i)+1)+" — tap to open");
+      if(isOpen){ open++; floatHearts(3);
+        if(open>=CONFIG.loveNotes.length){
+          c.querySelector("#nc").textContent="All unlocked. Now… the real reason for all of this. 💗";
+          if(!c.querySelector(".holder").children.length){
+            const next=el(`<button class="btn gold" style="margin-top:16px;">I'm ready ›</button>`);
+            next.onclick=()=>go(7); c.querySelector(".holder").appendChild(next);
+          }
+        } else {
+          c.querySelector("#nc").textContent=open+" of "+CONFIG.loveNotes.length+" unlocked";
+        }
+      }
+    };
+  });
+  mount(c);
+  mount(navRow(5,7,"Skip to the final demand ›"));
+}
+
+// ---------- 7: CHALLENGE ----------
+function level7(){
+  const c=el(`<section class="card enter">
+    <p class="eyebrow">Royal Decree</p>
+    <h2>The Ultimate ${esc(name())} Challenge</h2>
+    <p class="lead">You've reviewed the evidence, Your Highness. Now claim what you're owed. Pick one (or all — the court won't stop you):</p>
+    <div class="challenge-grid"></div>
+    <div class="holder"></div>
+  </section>`);
+  const grid=c.querySelector(".challenge-grid"), holder=c.querySelector(".holder");
+  CONFIG.challenges.forEach(ch=>{
+    const b=el(`<button class="btn" style="background:#fff;color:var(--rose-deep);border:1.5px solid rgba(196,76,110,.3);box-shadow:none;">${esc(tmpl(ch.label))} ${ch.emoji}</button>`);
+    b.onclick=()=>{
+      floatHearts(10);
+      holder.innerHTML="";
+      const r=el(`<div class="challenge-result"><span class="big">${ch.emoji}</span>${esc(tmpl(ch.r))}</div>`);
+      holder.appendChild(r);
+
+      // copy-a-message-back button
+      const copyWrap=el(`<div class="copy-note"></div>`);
+      const copyBtn=el(`<button class="btn ghost">💌 Copy a message to send him back</button>`);
+      const fb=el(`<div class="copy-feedback" aria-live="polite"></div>`);
+      copyBtn.onclick=async()=>{
+        const text=tmpl(CONFIG.copyMessage);
+        try{ await navigator.clipboard.writeText(text); fb.textContent="Copied ❤️ — now go paste it and send it to him."; }
+        catch(e){
+          const ta=document.createElement("textarea"); ta.value=text; ta.style.position="fixed"; ta.style.opacity="0";
+          document.body.appendChild(ta); ta.select();
+          try{ document.execCommand("copy"); fb.textContent="Copied ❤️ — now go send it to him."; }
+          catch(_){ fb.textContent="Couldn't auto-copy. Here it is: “"+text+"”"; }
+          ta.remove();
+        }
+      };
+      copyWrap.appendChild(copyBtn); copyWrap.appendChild(fb);
+      holder.appendChild(copyWrap);
+
+      const next=el(`<button class="btn gold" style="margin-top:16px;">The real reason behind all this ›</button>`);
+      next.onclick=()=>go(8); holder.appendChild(next);
+      r.scrollIntoView({behavior:reduceMotion?"auto":"smooth",block:"nearest"});
+    };
+    grid.appendChild(b);
+  });
+  mount(c);
+  mount(navRow(6,null));
+}
+
+// ---------- 8: FINALE LETTER ----------
+function finale(){
+  const idx = (CONFIG.finalePhotoIndex!=null) ? CONFIG.finalePhotoIndex : null;
+  const bgUrl = (idx!=null ? PhotoStore.get(idx) : null) || PhotoStore.lastUrl() || PhotoStore.firstUrl();
+  const fb=document.getElementById("finaleBg");
+  if(bgUrl){ fb.style.backgroundImage=`url("${bgUrl}")`; }
+  // delay the warm transition slightly for effect
+  setTimeout(()=>document.body.classList.add("finale-on"), 60);
+
+  const c=el(`<section class="letter-card">
+    <p class="eyebrow">The Real Reason Behind This Game</p>
+    <h2>${esc(tmpl(CONFIG.letterGreeting))} ❤️</h2>
+    <div class="letter-body">${esc(tmpl(letterText()))}<span class="signoff">Forever yours,
+${esc(tmpl(CONFIG.signoff))}.</span></div>
+    <div class="verdict-final">CASE CLOSED. LOVE CONFIRMED.<br>${esc(name().toUpperCase())} WINS. ALWAYS. ❤️</div>
+    <div class="btn-stack">
+      <button class="btn" id="hugBtn">CLAIM YOUR REAL-LIFE HUG 🫂</button>
+    </div>
+    <div class="holder"></div>
+  </section>`);
+  c.querySelector("#hugBtn").onclick=()=>{
+    confetti(130); floatHearts(26);
+    const holder=c.querySelector(".holder");
+    holder.innerHTML="";
+    const r=el(`<div class="challenge-result" style="margin-top:20px;"><span class="big">🫂</span>Virtual hug delivered. Real-life hug still pending — please collect from your husband personally. No expiry date. Unlimited renewals. ❤️</div>`);
+    holder.appendChild(r);
+    const next=el(`<button class="btn gold" style="margin-top:16px;">Finish ›</button>`);
+    next.onclick=()=>go(9); holder.appendChild(next);
+    r.scrollIntoView({behavior:reduceMotion?"auto":"smooth",block:"nearest"});
+  };
+  mount(c);
+  const row=navRow(7,null); row.style.marginTop="14px"; mount(row);
+}
+
+// ---------- 9: COMPLETION ----------
+function completion(){
+  const c=el(`<section class="card center enter">
+    <div class="trophy">🏆</div>
+    <h2>Wifeey Wins. Always.</h2>
+    <p class="lead">Investigation complete. Verdict upheld in every court, in every lifetime. You are loved, wanted, and cherished — today and on all the ordinary days too. ❤️</p>
+    <div class="btn-stack">
+      <button class="btn" id="replay">Play it again 🔁</button>
+      <button class="btn ghost" id="reread">Re-read the letter 💌</button>
+    </div>
+  </section>`);
+  c.querySelector("#replay").onclick=()=>{ floatHearts(10); go(0); };
+  c.querySelector("#reread").onclick=()=>go(8);
+  mount(c);
+  floatHearts(12);
+}
+
+// =====================  SETUP SHEET  =====================
+const setupBtn=document.getElementById("setupBtn");
+setupBtn.onclick=openSetup;
+function openSetup(){
+  const overlay=el(`<div class="overlay" role="dialog" aria-modal="true" aria-label="Setup and personalization"></div>`);
+  const sheet=el(`<div class="sheet"></div>`);
+  sheet.innerHTML=`
+    <h2>Make it hers 💗</h2>
+    <p class="muted" style="margin-top:-6px;">Everything here is saved privately on this device. Nothing is uploaded.</p>
+    <div class="field">
+      <label for="nm">Her nickname</label>
+      <input type="text" id="nm" value="${esc(name())}" placeholder="Wifeey" autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false">
+      <p class="hintline">Used everywhere in the game.</p>
+    </div>
+    <div class="field">
+      <label>Her photos (${PhotoStore.SLOTS} slots)</label>
+      <div class="photo-setup" id="photoSetup"></div>
+      <p class="hintline">Tip: slot 1 shows on the welcome screen; the last one you add becomes the final-letter backdrop.</p>
+    </div>
+    <div class="field">
+      <label for="lt">The final love letter</label>
+      <textarea id="lt">${esc(letterText())}</textarea>
+      <p class="hintline">Use {name} and it becomes her nickname automatically.</p>
+    </div>
+    <div class="sheet-foot">
+      <button class="btn ghost" id="closeSetup" style="flex:1">Close</button>
+      <button class="btn" id="saveSetup" style="flex:2">Save ❤️</button>
+    </div>`;
+  overlay.appendChild(sheet);
+  document.body.appendChild(overlay);
+
+  // build photo slots
+  const ps=sheet.querySelector("#photoSetup");
+  for(let i=0;i<PhotoStore.SLOTS;i++){
+    const url=PhotoStore.get(i);
+    const cap = (OV.captions && OV.captions[i]!=null) ? OV.captions[i] : (CONFIG.gallery[i]?CONFIG.gallery[i].note:"");
+    const label = CONFIG.gallery[i] ? CONFIG.gallery[i].label : ("Photo "+(i+1));
+    const item=el(`<div class="ps-item">
+      <div class="ps-thumb">${url?`<img src="${url}" alt="">`:`<span style="font-size:26px;">🌸</span>`}</div>
+      <div class="nm">${esc(label)}</div>
+      <label class="pick">${url?"Change":"Add photo"}<input type="file" accept="image/*" style="display:none"></label>
+      ${url?`<div><button class="clr">remove</button></div>`:``}
+      <input type="text" class="cap" placeholder="Caption (optional)" value="${esc(tmpl(cap))}" autocomplete="off" spellcheck="false">
+    </div>`);
+    const fileInput=item.querySelector('input[type=file]');
+    fileInput.addEventListener("change",async(e)=>{
+      const f=e.target.files&&e.target.files[0]; if(!f) return;
+      const u=await PhotoStore.set(i,f);
+      const thumb=item.querySelector(".ps-thumb"); thumb.innerHTML=`<img src="${u}" alt="">`;
+      item.querySelector(".pick").childNodes[0].nodeValue="Change";
+      if(!item.querySelector(".clr")){
+        const d=el(`<div><button class="clr">remove</button></div>`);
+        item.insertBefore(d, item.querySelector(".cap"));
+        d.querySelector(".clr").onclick=()=>clearSlot(i,item);
+      }
+    });
+    const clr=item.querySelector(".clr"); if(clr) clr.onclick=()=>clearSlot(i,item);
+    ps.appendChild(item);
+  }
+  function clearSlot(i,item){
+    PhotoStore.clear(i);
+    item.querySelector(".ps-thumb").innerHTML=`<span style="font-size:26px;">🌸</span>`;
+    item.querySelector(".pick").childNodes[0].nodeValue="Add photo";
+    const d=item.querySelector(".clr"); if(d) d.parentElement.remove();
+  }
+
+  function close(){ overlay.remove(); }
+  overlay.addEventListener("click",e=>{ if(e.target===overlay) close(); });
+  sheet.querySelector("#closeSetup").onclick=close;
+  sheet.querySelector("#saveSetup").onclick=()=>{
+    OV.wifeyName=sheet.querySelector("#nm").value.trim()||CONFIG.wifeyName;
+    OV.letter=sheet.querySelector("#lt").value;
+    OV.captions=OV.captions||{};
+    sheet.querySelectorAll(".ps-item").forEach((it,i)=>{ OV.captions[i]=it.querySelector(".cap").value; });
+    saveOverrides(OV);
+    close();
+    go(current); // re-render current level with new content
+    floatHearts(8);
+  };
+  // focus for accessibility
+  setTimeout(()=>sheet.querySelector("#nm").focus(),120);
+  // esc to close
+  const onKey=(e)=>{ if(e.key==="Escape"){ close(); document.removeEventListener("keydown",onKey);} };
+  document.addEventListener("keydown",onKey);
+}
+
+// =====================  BOOT  =====================
+(async function boot(){
+  await PhotoStore.init();
+  go(0);
+})();
+</script>
+</body>
+</html>
